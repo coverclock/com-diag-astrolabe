@@ -1,0 +1,126 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:        timeserver
+# Required-Start:  $network $remote_fs $syslog
+# Required-Stop:   $network $remote_fs $syslog
+# Default-Start:   2 3 4 5
+# Default-Stop:    1
+# Short-Description: Start time service
+### END INIT INFO
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin/:/usr/local/bin
+
+. /lib/lsb/init-functions
+
+DAEMON1=/usr/local/sbin/gpsd
+PIDFILE1=/var/run/gpsd.pid
+DAEMON2=/usr/local/sbin/ntpd
+PIDFILE2=/var/run/ntpd.pid
+#DAEMON3=/home/pi/bin/hourglass.py
+#PIDFILE3=/var/run/hourglass.pid
+
+test -x $DAEMON1 || exit 5
+test -x $DAEMON2 || exit 5
+#test -x $DAEMON3 || exit 5
+
+LOCKFILE=/var/lock/ntpdate
+
+lock_ntpdate() {
+	if [ -x /usr/bin/lockfile-create ]; then
+		lockfile-create $LOCKFILE
+		lockfile-touch $LOCKFILE &
+		LOCKTOUCHPID="$!"
+	fi
+}
+
+unlock_ntpdate() {
+	if [ -x /usr/bin/lockfile-create ] ; then
+		kill $LOCKTOUCHPID
+		lockfile-remove $LOCKFILE
+	fi
+}
+
+NTPD_OPTS=-g
+
+RUNASUSER=ntp
+UGID=$(getent passwd $RUNASUSER | cut -f 3,4 -d:) || true
+if test "$(uname -s)" = "Linux"; then
+	NTPD_OPTS="$NTPD_OPTS -u $UGID"
+fi
+
+# It's best to have gpsd start first.  That way when ntpd restarts it has
+# a good local time handy.  If ntpd starts first, it will set the local
+# clock using a remote, probably pool, server.  Then ntpd has to spend a
+# whole day undoing the damage done to the PLL.
+
+case $1 in
+	start)
+		# Set the system clock from the hardware clock.
+		#log_daemon_msg "Reading hardware clock" "timeservice"
+		#hwclock -u -s
+		#status=$?
+		#log_end_msg $status
+		# Make sure the UART device is in a good state
+	        # Adafruit HAT starts at some weird baud rate unknown to man.
+		stty -F /dev/gpsd0 raw 9600 cs8 clocal -cstopb
+		# Launch gpsd
+		log_daemon_msg "Starting GPSD server" "timeservice"
+		start-stop-daemon --start --quiet --oknodo --pidfile $PIDFILE1 --startas $DAEMON1 -- -P $PIDFILE1 $GPSD_OPTS /dev/gpsd0
+		status=$?
+		log_end_msg $status
+		lock_ntpdate
+		# Launch ntpd
+		log_daemon_msg "Starting NTP server" "timeservice"
+		start-stop-daemon --start --quiet --oknodo --pidfile $PIDFILE2 --startas $DAEMON2 -- -p $PIDFILE2 $NTPD_OPTS
+		status=$?
+		log_end_msg $status
+		unlock_ntpdate
+		# Launch hourglass
+		#log_daemon_msg "Starting hourglass daemon" "timeservice"
+		#start-stop-daemon --start --quiet --oknodo --pidfile $PIDFILE3 --startas $DAEMON3 --make-pidfile --background --
+		#status=$?
+		#log_end_msg $status
+		;;
+	stop)
+		log_daemon_msg "Stopping gpsd" "timeservice"
+		start-stop-daemon --stop --quiet --oknodo --pidfile $PIDFILE1
+		log_end_msg $?
+		log_daemon_msg "Stopping ntpd" "timeservice"
+		start-stop-daemon --stop --quiet --oknodo --pidfile $PIDFILE2
+		log_end_msg $?
+		#log_daemon_msg "Stopping hourglass" "timeservice"
+		#start-stop-daemon --stop --quiet --oknodo --pidfile $PIDFILE3 --remove-pidfile
+		#log_end_msg $?
+		#log_daemon_msg "Writing hardware clock" "timeservice"
+		#hwclock -u -w
+		#status=$?
+		#log_end_msg $status
+		#rm -f $PIDFILE1 $PIDFILE2 $PIDFILE3
+		rm -f $PIDFILE1 $PIDFILE2
+		;;
+	restart|force-reload)
+		$0 stop && sleep 2 && $0 start
+		;;
+	try-restart)
+		if $0 status >/dev/null; then
+			$0 restart
+		else
+			exit 0
+		fi
+		;;
+	reload)
+		exit 3
+		;;
+	status)
+		status_of_proc $DAEMON1 "time service"
+		status_of_proc $DAEMON2 "time service"
+		#status_of_proc $DAEMON3 "time service"
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart|try-restart|force-reload|status}"
+		exit 2
+		;;
+esac
+
+# end

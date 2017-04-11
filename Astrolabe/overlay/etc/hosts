@@ -1,0 +1,8 @@
+127.0.0.1	localhost
+::1		localhost ip6-localhost ip6-loopback
+ff02::1		ip6-allnodes
+ff02::2		ip6-allrouters
+127.0.1.1       astrolabe
+192.168.1.246   astrolabe-lan
+192.168.1.247   astrolabe-wlan
+192.168.1.237   mercury
