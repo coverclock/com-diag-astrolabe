@@ -17,12 +17,12 @@ DAEMON1=/usr/local/sbin/gpsd
 PIDFILE1=/var/run/gpsd.pid
 DAEMON2=/usr/local/sbin/ntpd
 PIDFILE2=/var/run/ntpd.pid
-#DAEMON3=/home/pi/bin/hourglass.py
-#PIDFILE3=/var/run/hourglass.pid
+DAEMON3=/home/pi/bin/hourglass.py
+PIDFILE3=/var/run/hourglass.pid
 
 test -x $DAEMON1 || exit 5
 test -x $DAEMON2 || exit 5
-#test -x $DAEMON3 || exit 5
+test -x $DAEMON3 || exit 5
 
 LOCKFILE=/var/lock/ntpdate
 
@@ -57,10 +57,10 @@ fi
 case $1 in
 	start)
 		# Set the system clock from the hardware clock.
-		#log_daemon_msg "Reading hardware clock" "timeservice"
-		#hwclock -u -s
-		#status=$?
-		#log_end_msg $status
+		log_daemon_msg "Reading hardware clock" "timeservice"
+		hwclock -u -s
+		status=$?
+		log_end_msg $status
 		# Make sure the UART device is in a good state
 	        # Adafruit HAT starts at some weird baud rate unknown to man.
 		stty -F /dev/gpsd0 raw 9600 cs8 clocal -cstopb
@@ -77,10 +77,10 @@ case $1 in
 		log_end_msg $status
 		unlock_ntpdate
 		# Launch hourglass
-		#log_daemon_msg "Starting hourglass daemon" "timeservice"
-		#start-stop-daemon --start --quiet --oknodo --pidfile $PIDFILE3 --startas $DAEMON3 --make-pidfile --background --
-		#status=$?
-		#log_end_msg $status
+		log_daemon_msg "Starting hourglass daemon" "timeservice"
+		start-stop-daemon --start --quiet --oknodo --pidfile $PIDFILE3 --startas $DAEMON3 --make-pidfile --background --
+		status=$?
+		log_end_msg $status
 		;;
 	stop)
 		log_daemon_msg "Stopping gpsd" "timeservice"
@@ -89,15 +89,14 @@ case $1 in
 		log_daemon_msg "Stopping ntpd" "timeservice"
 		start-stop-daemon --stop --quiet --oknodo --pidfile $PIDFILE2
 		log_end_msg $?
-		#log_daemon_msg "Stopping hourglass" "timeservice"
-		#start-stop-daemon --stop --quiet --oknodo --pidfile $PIDFILE3 --remove-pidfile
-		#log_end_msg $?
-		#log_daemon_msg "Writing hardware clock" "timeservice"
-		#hwclock -u -w
-		#status=$?
-		#log_end_msg $status
-		#rm -f $PIDFILE1 $PIDFILE2 $PIDFILE3
-		rm -f $PIDFILE1 $PIDFILE2
+		log_daemon_msg "Stopping hourglass" "timeservice"
+		start-stop-daemon --stop --quiet --oknodo --pidfile $PIDFILE3 --remove-pidfile
+		log_end_msg $?
+		log_daemon_msg "Writing hardware clock" "timeservice"
+		hwclock -u -w
+		status=$?
+		log_end_msg $status
+		rm -f $PIDFILE1 $PIDFILE2 $PIDFILE3
 		;;
 	restart|force-reload)
 		$0 stop && sleep 2 && $0 start
@@ -115,7 +114,7 @@ case $1 in
 	status)
 		status_of_proc $DAEMON1 "time service"
 		status_of_proc $DAEMON2 "time service"
-		#status_of_proc $DAEMON3 "time service"
+		status_of_proc $DAEMON3 "time service"
 		;;
 	*)
 		echo "Usage: $0 {start|stop|restart|try-restart|force-reload|status}"
@@ -124,3 +123,4 @@ case $1 in
 esac
 
 # end
+
