@@ -10,7 +10,7 @@ Licensed under the terms of the FSF GPL v2.
 
 ABSTRACT
 
-NTP server based on Eric Raymond's clockmaker and the Jackson Lab CSAC GPSDO.
+NTP server based on Eric Raymond's clockmaker and the Jackson Labs CSAC GPSDO.
 
 NOTES
 
@@ -27,4 +27,49 @@ NOTES
     Apr 25 11:36:16 mercury mtp-probe: checking bus 1, device 13: "/sys/devices/pci0000:00/0000:00:14.0/usb1/1-4/1-4.4"
     Apr 25 11:36:16 mercury mtp-probe: bus: 1, device: 13 was not an MTP device
 
+    screen /dev/ttyUSB0 115200 8n1
+    SYSTem:LCD:CONTrast 0.4
+    GPS:PORT RS232
+    GPS:GPGGA 1
+    GPS:GPRMC 1
+    GPS:GPZDA 1
+    GPS:GPGSV 1
+    GPS:PASHR 0
 
+    cd clockmaker
+    cd gpsd
+    scons --help
+    scons --clean
+    scons \
+    	fixed_port_speed=38400 \
+    	fixed_stop_bits=1 \
+    	gpsdclients=yes \
+        magic_hat=yes \
+    	ncurses=yes \
+    	nmea0183=yes \
+    	ntp=yes \
+    	ntpshm=yes \
+    	oscillator=yes \
+    	pps=yes \
+    	prefix="/usr/local" \
+    	reconfigure=no \
+    	shared=no \
+    	shm_export=yes \
+    	socket_export=yes \
+    	timeservice=yes \
+    	ublox=yes
+
+    sudo /etc/init.d/timeservice stop
+    screen /dev/gpsd0 115200 8n1
+    sudo ppstest /dev/pps0
+    gpsmon /dev/gpsd0
+
+    sudo gpsd -N -D 3 -b /dev/gpsd0 /dev/pps0
+
+REFERENCES
+
+<http://catb.org/gpsd/hacking.html>
+
+<http://git.savannah.gnu.org/cgit/gpsd.git/tree/build.txt>
+
+<https://en.wikipedia.org/wiki/NTP_server_misuse_and_abuse>
