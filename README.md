@@ -54,7 +54,6 @@ NOTES
     	prefix="/usr/local" \
     	reconfigure=no \
     	shared=no \
-    	shm_export=yes \
     	socket_export=yes \
     	timeservice=yes \
     	ublox=yes
@@ -73,3 +72,5 @@ REFERENCES
 <http://git.savannah.gnu.org/cgit/gpsd.git/tree/build.txt>
 
 <https://en.wikipedia.org/wiki/NTP_server_misuse_and_abuse>
+
+<https://docs.ntpsec.org/latest/ntp_conf.html>
