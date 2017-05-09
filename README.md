@@ -2,7 +2,7 @@
 
 COPYRIGHT
 
-Copyright 2017 by the  Digital Aggregates CorporAation, Arvada Colorado USA.
+Copyright 2017 by the  Digital Aggregates Corporation, Arvada Colorado USA.
 
 LICENSE
 
