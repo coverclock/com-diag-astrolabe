@@ -10,7 +10,54 @@ Licensed under the terms of the FSF GPL v2.
 
 ABSTRACT
 
-NTP server based on Eric Raymond's clockmaker and the Jackson Labs CSAC GPSDO.
+Astrolabe is an implementation of a stratum-1 NTP server on a Raspberry
+Pi 3 using a Microsemi chip-scale atomic clock (CSAC) integrated onto
+a Jackson Labs Technologies CSAC GPS-disciplined oscillator (CSAC
+GPSDO). The software is a slightly modified version of my Hourglass
+project, being similarly based on Eric Raymond's clockmaker script.
+
+CONTACT
+
+Chip Overclock  
+<mailto:coverclock@diag.com>  
+Digital Aggregates Corporation  
+3440 Youngfield Street  
+Suite 209  
+Wheat Ridge CO 80033 USA  
+
+BLOG
+
+<http://coverclock.blogspot.com/2017/05/my-stratum-0-atomic-clock_9.html>
+
+IMAGES
+
+<https://www.flickr.com/photos/johnlsloan/albums/72157680973310391>
+
+REFERENCES
+
+<http://catb.org/gpsd/hacking.html>
+
+<http://git.savannah.gnu.org/cgit/gpsd.git/tree/build.txt>
+
+<https://en.wikipedia.org/wiki/NTP_server_misuse_and_abuse>
+
+<https://docs.ntpsec.org/latest/ntp_conf.html>
+
+<http://catb.org/gpsd/gpsd-time-service-howto.html>
+
+<https://docs.ntpsec.org/latest/ntp_conf.html>
+
+REPOSITORIES
+
+<https://github.com/coverclock/com-diag-astrolabe>
+
+<https://github.com/coverclock/com-diag-hourglass>
+
+<https://www.ntpsec.org/white-papers/stratum-1-microserver-howto/clockmaker>
+
+<git://git.savannah.nongnu.org/gpsd.git>
+
+<https://gitlab.com/NTPsec/ntpsec.git>
 
 NOTES
 
@@ -59,21 +106,3 @@ NOTES
     gpsmon /dev/gpsd0
 
     sudo gpsd -N -D 3 -b /dev/gpsd0 /dev/pps0
-
-IMAGES
-
-<https://www.flickr.com/photos/johnlsloan/albums/72157680973310391>
-
-REFERENCES
-
-<http://catb.org/gpsd/hacking.html>
-
-<http://git.savannah.gnu.org/cgit/gpsd.git/tree/build.txt>
-
-<https://en.wikipedia.org/wiki/NTP_server_misuse_and_abuse>
-
-<https://docs.ntpsec.org/latest/ntp_conf.html>
-
-<http://catb.org/gpsd/gpsd-time-service-howto.html>
-
-<https://docs.ntpsec.org/latest/ntp_conf.html>
