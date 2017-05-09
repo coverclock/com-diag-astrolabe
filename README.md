@@ -29,15 +29,8 @@ NOTES
 
     screen /dev/ttyUSB0 115200 8n1
     SYSTem:LCD:CONTrast 0.4
-    GPS:PORT RS232
-    GPS:GPGGA 1
-    GPS:GPRMC 1
-    GPS:GPZDA 1
-    GPS:GPGSV 1
-    GPS:PASHR 0
 
-    cd clockmaker
-    cd gpsd
+    cd src/clockmaker/gpsd
     scons --help
     scons --clean
     scons \
@@ -57,6 +50,8 @@ NOTES
     	socket_export=yes \
     	timeservice=yes \
     	ublox=yes
+    scons
+    scons install
 
     sudo /etc/init.d/timeservice stop
     screen /dev/gpsd0 115200 8n1
@@ -65,6 +60,10 @@ NOTES
 
     sudo gpsd -N -D 3 -b /dev/gpsd0 /dev/pps0
 
+IMAGES
+
+<https://www.flickr.com/photos/johnlsloan/albums/72157680973310391>
+
 REFERENCES
 
 <http://catb.org/gpsd/hacking.html>
@@ -72,5 +71,9 @@ REFERENCES
 <http://git.savannah.gnu.org/cgit/gpsd.git/tree/build.txt>
 
 <https://en.wikipedia.org/wiki/NTP_server_misuse_and_abuse>
+
+<https://docs.ntpsec.org/latest/ntp_conf.html>
+
+<http://catb.org/gpsd/gpsd-time-service-howto.html>
 
 <https://docs.ntpsec.org/latest/ntp_conf.html>
