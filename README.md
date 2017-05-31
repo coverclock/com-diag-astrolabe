@@ -1,14 +1,14 @@
 # com-diag-astrolabe
 
-COPYRIGHT
+## Copyright
 
 Copyright 2017 by the  Digital Aggregates Corporation, Arvada Colorado USA.
 
-LICENSE
+## License
 
 Licensed under the terms of the FSF GPL v2.
 
-ABSTRACT
+## Abstract
 
 Astrolabe is an implementation of a stratum-1 NTP server on a Raspberry
 Pi 3 using a Microsemi chip-scale atomic clock (CSAC) integrated onto a
@@ -16,7 +16,7 @@ Jackson Labs Technologies (JLT) CSAC GPS-disciplined oscillator (CSAC
 GPSDO). The software is a slightly modified version of my Hourglass
 project, being similarly based on Eric Raymond's clockmaker script.
 
-CONTACT
+## Contact
 
 Chip Overclock  
 <mailto:coverclock@diag.com>  
@@ -25,22 +25,22 @@ Digital Aggregates Corporation
 Suite 209  
 Wheat Ridge CO 80033 USA
 
-TRADEMARKS
+## Trademarks
 
 Chip Overclock is a registered trademark of John Sloan.
 
 Digital Aggregates Corporation is a registered trademark of the Digital
 Aggregates Corporation.
 
-BLOG
+## Blog
 
 <http://coverclock.blogspot.com/2017/05/my-stratum-0-atomic-clock_9.html>
 
-IMAGES
+## Images
 
 <https://www.flickr.com/photos/johnlsloan/albums/72157680973310391>
 
-REFERENCES
+## References
 
 <http://catb.org/gpsd/hacking.html>
 
@@ -56,7 +56,7 @@ REFERENCES
 
 <http://www.jackson-labs.com/assets/uploads/main/CSAC_Manual_v1_6.pdf>
 
-REPOSITORIES
+## Repositories
 
 <https://github.com/coverclock/com-diag-astrolabe>
 
@@ -68,7 +68,7 @@ REPOSITORIES
 
 <https://gitlab.com/NTPsec/ntpsec.git>
 
-SETUP
+## Remarks
 
 If you power the JLT GPSDO board via USB to the Raspberry Pi 3 like I did,
 the the ARM microcontroller on the GPSDO enumerates a serial port. You
@@ -110,7 +110,7 @@ the CSAC should GPS lock be subsequently lost, and then when GPS lock is
 reacquired slowly bring 1PPS into phase with GPS 1PPS. (I've suggested
 this to JLT).
 
-NOTES
+## Notes
 
     Apr 25 11:36:16 mercury kernel: [959158.661259] usb 1-4.4: new full-speed USB device number 13 using xhci_hcd
     Apr 25 11:36:16 mercury kernel: [959158.768366] usb 1-4.4: New USB device found, idVendor=0403, idProduct=6001
