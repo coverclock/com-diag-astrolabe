@@ -11,8 +11,8 @@ Licensed under the terms of the FSF GPL v2.
 ABSTRACT
 
 Astrolabe is an implementation of a stratum-1 NTP server on a Raspberry
-Pi 3 using a Microsemi chip-scale atomic clock (CSAC) integrated onto
-a Jackson Labs Technologies CSAC GPS-disciplined oscillator (CSAC
+Pi 3 using a Microsemi chip-scale atomic clock (CSAC) integrated onto a
+Jackson Labs Technologies (JLT) CSAC GPS-disciplined oscillator (CSAC
 GPSDO). The software is a slightly modified version of my Hourglass
 project, being similarly based on Eric Raymond's clockmaker script.
 
@@ -23,7 +23,14 @@ Chip Overclock
 Digital Aggregates Corporation  
 3440 Youngfield Street  
 Suite 209  
-Wheat Ridge CO 80033 USA  
+Wheat Ridge CO 80033 USA
+
+TRADEMARKS
+
+Chip Overclock is a registered trademark of John Sloan.
+
+Digital Aggregates Corporation is a registered trademark of the Digital
+Aggregates Corporation.
 
 BLOG
 
@@ -47,6 +54,8 @@ REFERENCES
 
 <https://docs.ntpsec.org/latest/ntp_conf.html>
 
+<http://www.jackson-labs.com/assets/uploads/main/CSAC_Manual_v1_6.pdf>
+
 REPOSITORIES
 
 <https://github.com/coverclock/com-diag-astrolabe>
@@ -58,6 +67,48 @@ REPOSITORIES
 <git://git.savannah.nongnu.org/gpsd.git>
 
 <https://gitlab.com/NTPsec/ntpsec.git>
+
+SETUP
+
+If you power the JLT GPSDO board via USB to the Raspberry Pi 3 like I did,
+the the ARM microcontroller on the GPSDO enumerates a serial port. You
+can ssh into the PI and from there screen into the USB serial port to
+get an SCPI command shell. This is exactly the same command shell that
+is available via the external RS232 connection that I wired up (you can
+use both at the same time).
+
+    screen /dev/ttyUSB0 115200 8n1
+
+You only have to issue the setup commands through this interface (or
+the RS232 interface) once ever; the settings are saved in NVRAM.
+
+You'll panic the first time you try to connect the LCD display to the
+ARM microcontroller on the JLT GPSDO board and nothing shows up. That's
+because the default contrast for the display, set using a software
+command, isn't useful. Here's what worked for me.
+
+    SYSTem:LCD:CONTrast 0.4
+
+The default behavior of the JLT GPSDO is to stop generating the 1PPS
+should it not have GPS lock. This defeats the purpose of the cesium
+oscillator in this application, which is to maintain 1PPS during holdover
+when GPS is not available. This command changes this behavior so that
+the 1PPS is continuously generated independently of GPS lock, but is
+slowly brought into phase with GPS when it is available.
+
+    SYNChronization:OUTput:1PPs:RESET ON
+
+But this isn't quite correct either; the device generates 1PPS right from
+power-up, and is so far out of line with other peer NTP servers that NTP
+rejects PPS as a "false ticker".
+
+I think the ideal behavior (which I haven't figured out how to configure)
+would be to delay emitting the 1PPS and NMEA until an initial GPS lock
+was established following power on, generate 1PPS from GPS once locked,
+and then from the CSAC once phase locked,  continue emitting 1PPS from
+the CSAC should GPS lock be subsequently lost, and then when GPS lock is
+reacquired slowly bring 1PPS into phase with GPS 1PPS. (I've suggested
+this to JLT).
 
 NOTES
 
@@ -73,9 +124,6 @@ NOTES
     Apr 25 11:35:40 mercury wpa_supplicant[1194]: message repeated 17 times: [ wlan0: Failed to initiate sched scan]
     Apr 25 11:36:16 mercury mtp-probe: checking bus 1, device 13: "/sys/devices/pci0000:00/0000:00:14.0/usb1/1-4/1-4.4"
     Apr 25 11:36:16 mercury mtp-probe: bus: 1, device: 13 was not an MTP device
-
-    screen /dev/ttyUSB0 115200 8n1
-    SYSTem:LCD:CONTrast 0.4
 
     cd src/clockmaker/gpsd
     scons --help
