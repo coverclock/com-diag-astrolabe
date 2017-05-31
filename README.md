@@ -89,27 +89,6 @@ command, isn't useful. Here's what worked for me.
 
     SYSTem:LCD:CONTrast 0.4
 
-The default behavior of the JLT GPSDO is to stop generating the 1PPS
-should it not have GPS lock. This defeats the purpose of the cesium
-oscillator in this application, which is to maintain 1PPS during holdover
-when GPS is not available. This command changes this behavior so that
-the 1PPS is continuously generated independently of GPS lock, but is
-slowly brought into phase with GPS when it is available.
-
-    SYNChronization:OUTput:1PPs:RESET ON
-
-But this isn't quite correct either; the device generates 1PPS right from
-power-up, and is so far out of line with other peer NTP servers that NTP
-rejects PPS as a "false ticker".
-
-I think the ideal behavior (which I haven't figured out how to configure)
-would be to delay emitting the 1PPS and NMEA until an initial GPS lock
-was established following power on, generate 1PPS from GPS once locked,
-and then from the CSAC once phase locked,  continue emitting 1PPS from
-the CSAC should GPS lock be subsequently lost, and then when GPS lock is
-reacquired slowly bring 1PPS into phase with GPS 1PPS. (I've suggested
-this to JLT).
-
 ## Notes
 
     Apr 25 11:36:16 mercury kernel: [959158.661259] usb 1-4.4: new full-speed USB device number 13 using xhci_hcd
