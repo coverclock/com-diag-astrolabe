@@ -90,11 +90,11 @@ command, isn't useful. Here's what worked for me.
     SYSTem:LCD:CONTrast 0.4
 
 Astrolabe (a.k.a. "O-2") originally used the raw u-Blox GPS NMEA stream
-to feed the GPS daemon. After some discussion with the kind JLT folks
+to feed the GPS daemon. After some discussion with the kind folks at JLT
 who make the CSAC GPSDO, I swapped the serial cables around to feed the
-GPS daemon from the ARM microcontroller on the GPSDO. This is supposed
-to work better during holdever when the GPS lock is lost. To get the
-ARM to output the NMEA sentences to its console serial port requires
+GPS daemon from the ARM microcontroller on the GPSDO. This is supposed to
+work better (or: at all) during holdever when the GPS lock is lost. To get
+the ARM to output the NMEA sentences to its console serial port requires
 the following commands (again, which only need to be done once, ever).
 
     GPS:PORT RS232
@@ -102,6 +102,58 @@ the following commands (again, which only need to be done once, ever).
     GPS:GPRMC 1
     GPS:GPZDA 1
     GPS:GPGSV 1
+
+If like me you are using Eric Raymond's clocknmaker script, you will
+be building the GPS daemon (gpsd) and NTP daemon (ntpd) right on the
+Raspberry Pi.  But to duplicate my project, you'll want to re-build
+and re-install the GPS daemon with some custom parameters. Here are
+the commands to do that.  You'll also want to run the GPS daemon in
+"broken" mode so it doesn't try to talk to the GPS device, because
+it isn't... it's talking to the SCPI command interface on the ARM
+microcontroller, which we configured above to deliver NMEA via that
+same interface to the GPS daemon. I've already specified the "-b" flag
+in the /etc/init.d/timeservice in the overlay directory.
+
+    cd src/clockmaker/gpsd
+    scons --clean
+    scons \
+    	fixed_port_speed=115200 \
+    	fixed_stop_bits=1 \
+    	gpsdclients=yes \
+        magic_hat=yes \
+    	ncurses=yes \
+    	nmea0183=yes \
+    	ntp=yes \
+    	ntpshm=yes \
+    	oscillator=yes \
+    	pps=yes \
+    	prefix="/usr/local" \
+    	reconfigure=no \
+    	shared=no \
+    	socket_export=yes \
+    	timeservice=yes
+    scons
+    scons install
+
+Use these commands to stop, start, or restart the time service (gpsd
+and ntpd) on the Pi.
+
+    sudo /etc/init.d/timeservice stop
+    sudo /etc/init.d/timeservice start
+    sudo /etc/init.d/timeservice restart
+
+Use this command on the Pi to connect to the SCPI USB serial interface
+on the ARM microcontroller.
+
+    screen /dev/gpsd0 115200 8n1
+
+Run this command to test the 1PPS after stopping the time service.
+
+    sudo ppstest /dev/pps0
+
+Run this command to test the NMEA stream after stopping the time service.
+
+    gpsmon /dev/gpsd0
 
 ## Notes
 
@@ -140,32 +192,5 @@ the following commands (again, which only need to be done once, ever).
     	ublox=yes
     scons
     scons install
-
-    cd src/clockmaker/gpsd
-    scons --help
-    scons --clean
-    scons \
-    	fixed_port_speed=115200 \
-    	fixed_stop_bits=1 \
-    	gpsdclients=yes \
-        magic_hat=yes \
-    	ncurses=yes \
-    	nmea0183=yes \
-    	ntp=yes \
-    	ntpshm=yes \
-    	oscillator=yes \
-    	pps=yes \
-    	prefix="/usr/local" \
-    	reconfigure=no \
-    	shared=no \
-    	socket_export=yes \
-    	timeservice=yes
-    scons
-    scons install
-
-    sudo /etc/init.d/timeservice stop
-    screen /dev/gpsd0 115200 8n1
-    sudo ppstest /dev/pps0
-    gpsmon /dev/gpsd0
 
     sudo gpsd -N -D 3 -b /dev/gpsd0 /dev/pps0
