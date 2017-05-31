@@ -89,6 +89,20 @@ command, isn't useful. Here's what worked for me.
 
     SYSTem:LCD:CONTrast 0.4
 
+Astrolabe (a.k.a. "O-2") originally used the raw u-Blox GPS NMEA stream
+to feed the GPS daemon. After some discussion with the kind JLT folks
+who make the CSAC GPSDO, I swapped the serial cables around to feed the
+GPS daemon from the ARM microcontroller on the GPSDO. This is supposed
+to work better during holdever when the GPS lock is lost. To get the
+ARM to output the NMEA sentences to its console serial port requires
+the following commands (again, which only need to be done once, ever).
+
+    GPS:PORT RS232
+    GPS:GPGGA 1
+    GPS:GPRMC 1
+    GPS:GPZDA 1
+    GPS:GPGSV 1
+
 ## Notes
 
     Apr 25 11:36:16 mercury kernel: [959158.661259] usb 1-4.4: new full-speed USB device number 13 using xhci_hcd
@@ -124,6 +138,28 @@ command, isn't useful. Here's what worked for me.
     	socket_export=yes \
     	timeservice=yes \
     	ublox=yes
+    scons
+    scons install
+
+    cd src/clockmaker/gpsd
+    scons --help
+    scons --clean
+    scons \
+    	fixed_port_speed=115200 \
+    	fixed_stop_bits=1 \
+    	gpsdclients=yes \
+        magic_hat=yes \
+    	ncurses=yes \
+    	nmea0183=yes \
+    	ntp=yes \
+    	ntpshm=yes \
+    	oscillator=yes \
+    	pps=yes \
+    	prefix="/usr/local" \
+    	reconfigure=no \
+    	shared=no \
+    	socket_export=yes \
+    	timeservice=yes
     scons
     scons install
 
