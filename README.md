@@ -103,7 +103,7 @@ the following commands (again, which only need to be done once, ever).
     GPS:GPZDA 1
     GPS:GPGSV 1
 
-If like me you are using Eric Raymond's clocknmaker script, you will
+If like me you are using Eric Raymond's clockmaker script, you will
 be building the GPS daemon (gpsd) and NTP daemon (ntpd) right on the
 Raspberry Pi.  But to duplicate my project, you'll want to re-build
 and re-install the GPS daemon with some custom parameters. Here are
@@ -112,7 +112,7 @@ the commands to do that.  You'll also want to run the GPS daemon in
 it isn't... it's talking to the SCPI command interface on the ARM
 microcontroller, which we configured above to deliver NMEA via that
 same interface to the GPS daemon. I've already specified the "-b" flag
-in the /etc/init.d/timeservice in the overlay directory.
+in the /etc/init.d/timeservice script in the overlay directory.
 
     cd src/clockmaker/gpsd
     scons --clean
@@ -120,7 +120,7 @@ in the /etc/init.d/timeservice in the overlay directory.
     	fixed_port_speed=115200 \
     	fixed_stop_bits=1 \
     	gpsdclients=yes \
-        magic_hat=yes \
+    	magic_hat=yes \
     	ncurses=yes \
     	nmea0183=yes \
     	ntp=yes \
@@ -177,7 +177,7 @@ Run this command to test the NMEA stream after stopping the time service.
     	fixed_port_speed=38400 \
     	fixed_stop_bits=1 \
     	gpsdclients=yes \
-        magic_hat=yes \
+    	magic_hat=yes \
     	ncurses=yes \
     	nmea0183=yes \
     	ntp=yes \
