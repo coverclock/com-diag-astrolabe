@@ -17,8 +17,6 @@ chip-scale atomic clock (CSAC). The software is a very slightly modified
 version of my Hourglass project, being similarly based on Eric Raymond's
 clockmaker script.
 
-![Astrolabe](https://flic.kr/p/UgrmnR)
-
 ## Contact
 
 Chip Overclock  
