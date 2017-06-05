@@ -10,11 +10,12 @@ Licensed under the terms of the FSF GPL v2.
 
 ## Abstract
 
-Astrolabe is an implementation of a stratum-1 NTP server on a Raspberry
-Pi 3 using a Microsemi chip-scale atomic clock (CSAC) integrated onto a
-Jackson Labs Technologies (JLT) CSAC GPS-disciplined oscillator (CSAC
-GPSDO). The software is a slightly modified version of my Hourglass
-project, being similarly based on Eric Raymond's clockmaker script.
+Astrolabe is an implementation of a stratum-1 NTP server using a Raspberry
+Pi 3 and a CSAC GPSDO: a Jackson Labs Technologies (JLT) GPS-disciplined
+oscillator (GPSDO) that incorporates a Microsemi (formerly Symmetricom)
+chip-scale atomic clock (CSAC). The software is a very slightly modified
+version of my Hourglass project, being similarly based on Eric Raymond's
+clockmaker script.
 
 ## Contact
 
@@ -154,6 +155,23 @@ Run this command to test the 1PPS after stopping the time service.
 Run this command to test the NMEA stream after stopping the time service.
 
     gpsmon /dev/gpsd0
+
+NTP is happiest when the GPS and PPS timing sources are tuned to take into
+account the time offset caused by software and hardware latencies. Eric
+Raymond's GPS Daemon Time Service HOWTO (see URL above) details how to do
+this. The gist is you enable the logging of statistics by the NTP daemon,
+and then use those numbers to calculate corrective offsets that you can
+apply to both the GPS and the PPS timing sources in the NTP configuration
+file. This is a lot simpler than it sounds. You can uncomment out the
+statements at the bottom of the /etc/ntp.conf file, the prototype of
+which is found in the overlay directory. Let it run for a few hours
+(or even days), and then run the peerstats.sh script, also found in the
+overlay directory, on the Pi to compute the time1 parameters for the GPS
+(unit 0) and PPS (unit 1) timing sources in the same configuration file.
+Note that the numerical units output by the NTP daemon in the statistics
+file are in milliseconds, but the time1 values in the configuration file
+are in seconds; the script takes care of this conversion for you so you
+can just cut and paste.
 
 ## Notes
 
