@@ -173,6 +173,14 @@ file are in milliseconds, but the time1 values in the configuration file
 are in seconds; the script takes care of this conversion for you so you
 can just cut and paste.
 
+It is important to feed NMEA to the GPS daemon using the SCPI serial port,
+not the raw NMEA serial port, for holdover to work correctly when GPS lock
+is lost. The ARM controller on the JLT board handles the synchronization
+of the NMEA time it generates with the PPS from the CSAC, about which
+the u-Blox GPS chip knows nothing. The u-Blox will continue to generate
+NMEA time, but it will be based on its own crystal oscillator, not the
+cesium-133-discplined oscillator, so will not be stratum-1.
+
 ## Notes
 
     Apr 25 11:36:16 mercury kernel: [959158.661259] usb 1-4.4: new full-speed USB device number 13 using xhci_hcd
