@@ -181,6 +181,20 @@ the u-Blox GPS chip knows nothing. The u-Blox will continue to generate
 NMEA time, but it will be based on its own crystal oscillator, not the
 cesium-133-discplined oscillator, so will not be stratum-1.
 
+Here are the markers the NTP query command uses to indicate the quality
+of the NTP hosts used by the NTP daemon. My interpretation is that I
+want to see my GPS time source marked with a '+' and my PPS time source
+marked with a '*'.
+
+    \b       reject
+    x        falsetick
+    .        excess
+    \-       outlyer
+    \+       candidate
+    #        selected (but not amongst top six)
+    \*       peer
+    o        PPS peer
+
 ## Notes
 
     Apr 25 11:36:16 mercury kernel: [959158.661259] usb 1-4.4: new full-speed USB device number 13 using xhci_hcd
