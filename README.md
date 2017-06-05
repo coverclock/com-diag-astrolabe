@@ -197,6 +197,16 @@ interpretation is that I want to see my GPS time source marked with a
     '*'         peer
     'o'         PPS peer
 
+I have used the GPSCon program with the SCPI command interface over the
+internal USB serial port.
+
+I have used the u-center program with NMEA and UBX on the external
+read-only RS-232 serial port.
+
+I have used the Lady Heather program with NMEA and UBX on the external
+read-only RS-232 serial port but haven't yet quite figured out how to
+get it to do something useful (but it seems to see data).
+
 ## Notes
 
     Apr 25 11:36:16 mercury kernel: [959158.661259] usb 1-4.4: new full-speed USB device number 13 using xhci_hcd
