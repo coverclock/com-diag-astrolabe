@@ -234,3 +234,40 @@ interpretation is that I want to see my GPS time source marked with a
     scons install
 
     sudo gpsd -N -D 3 -b /dev/gpsd0 /dev/pps0
+
+    ntpq -c peer -c as -c rl astrolabe
+    
+         remote           refid      st t when poll reach   delay   offset  jitter
+    ==============================================================================
+    *SHM(1)          .PPS.            0 l   18   64  377    0.000   -0.013   0.003
+    +SHM(0)          .GPS.            0 l    8   64  377    0.000   -0.245   1.874
+     us.pool.ntp.org .POOL.          16 p    -   64    0    0.000    0.000   0.001
+    -lithium.constan 18.26.4.105      2 u   65  128  377   60.922    3.246   0.726
+    -ntp1.wiktel.com .PPS.            1 u    4  128  377   55.512    1.848   1.362
+    -PBX.cytranet.ne 171.66.97.126    2 u   94  128  377   56.656    5.175   2.048
+    -eterna.binary.n 128.138.141.172  2 u  116  128  377   53.273    1.019   3.398
+    -christensenplac 209.51.161.238   2 u   48  128  177   59.319    1.031   6.326
+    -198.211.106.166 200.98.196.212   2 u   30  128  377   62.387  -52.190   6.415
+    +clock.trit.net  63.145.169.3     2 u   51   64  377   49.183    0.760   1.735
+    
+    ind assid status  conf reach auth condition  last_event cnt
+    ===========================================================
+      1 51767  962a   yes   yes  none  sys.peer    sys_peer  2
+      2 51768  9414   yes   yes  none candidate   reachable  1
+      3 51769  8811   yes  none  none    reject    mobilize  1
+      4 51770  1314    no   yes  none   outlier   reachable  1
+      5 51771  1314    no   yes  none   outlier   reachable  1
+      6 51772  1314    no   yes  none   outlier   reachable  1
+      7 51773  1314    no   yes  none   outlier   reachable  1
+      8 51774  1314    no   yes  none   outlier   reachable  1
+      9 51775  1314    no   yes  none   outlier   reachable  1
+     10 51776  1414    no   yes  none candidate   reachable  1
+    associd=0 status=0428 leap_none, sync_uhf_radio, 2 events, no_sys_peer,
+    version="ntpd ntpsec-0.9.6+4149 2017-03-15T10:30:25-0400",
+    processor="armv7l", system="Linux/4.9.24-v7+", leap=00, stratum=1,
+    precision=-20, rootdelay=0.000, rootdisp=1.270, refid=PPS,
+    reftime=dcdff9ab.88999611  Mon, Jun  5 2017  9:39:23.533,
+    clock=dcdff9be.313c1e26  Mon, Jun  5 2017  9:39:42.192, peer=51767, tc=6,
+    mintc=0, offset=-0.012899, frequency=-8.411423, sys_jitter=0.002524,
+    clk_jitter=0.000743, clk_wander=0.001140
+
