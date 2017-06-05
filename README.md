@@ -63,6 +63,8 @@ Aggregates Corporation.
 
 <https://github.com/coverclock/com-diag-hourglass>
 
+<https://github.com/coverclock/com-diag-bin>
+
 <https://www.ntpsec.org/white-papers/stratum-1-microserver-howto/clockmaker>
 
 <git://git.savannah.nongnu.org/gpsd.git>
