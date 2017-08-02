@@ -10,12 +10,15 @@ Licensed under the terms of the FSF GPL v2.
 
 ## Abstract
 
-Astrolabe is an implementation of a stratum-1 NTP server using a Raspberry
-Pi 3 and a CSAC GPSDO: a Jackson Labs Technologies (JLT) GPS-disciplined
-oscillator (GPSDO) that incorporates a Microsemi (formerly Symmetricom)
-chip-scale atomic clock (CSAC). The software is a very slightly modified
-version of my Hourglass project, being similarly based on Eric Raymond's
-clockmaker script.
+Astrolabe is an implementation of a stratum-1 NTP server with a stratum-0
+reference clock. It uses a Raspberry Pi 3 and a Jackson Labs Technologies
+(JLT) GPS-disciplined oscillator (GPSDO) that incorporates a Microsemi
+(formerly Symmetricom) chip-scale atomic clock (CSAC). The software is a
+very slightly modified version of my Hourglass project, being similarly
+based on Eric Raymond's clockmaker script. The hardware is all off the
+shelf components. Scanned images of my hand-drawn schematics can be found
+at the Images URL below; I made some later corrections which I describe
+in the Remarks further below.
 
 ## Contact
 
@@ -93,12 +96,13 @@ command, isn't useful. Here's what worked for me.
     SYSTem:LCD:CONTrast 0.4
 
 Astrolabe (a.k.a. "O-2") originally used the raw u-Blox GPS NMEA stream
-to feed the GPS daemon. After some discussion with the kind folks at JLT
-who make the CSAC GPSDO, I swapped the serial cables around to feed the
-GPS daemon from the ARM microcontroller on the GPSDO. This is supposed to
-work better (or: at all) during holdever when the GPS lock is lost. To get
-the ARM to output the NMEA sentences to its console serial port requires
-the following commands (again, which only need to be done once, ever).
+to feed the GPS daemon. After some discussion with the kind folks at
+JLT who make the CSAC GPSDO, I swapped the serial cables around to feed
+the GPS daemon from the ARM microcontroller on the GPSDO. My testing has
+verified that this works correctly during holdever when the GPS lock is
+lost. To get the ARM to output the NMEA sentences to its console serial
+port requires the following commands (again, which only need to be done
+once, ever).
 
     GPS:PORT RS232
     GPS:GPGGA 1
