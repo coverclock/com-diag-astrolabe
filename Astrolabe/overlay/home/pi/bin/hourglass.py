@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# Copyright 2017 Digital Aggregates Corporation, Arvada Colorado USA.
+# Copyright 2017-2024 Digital Aggregates Corporation, Arvada Colorado USA.
 # Licensed under the terms of the GPL v2.
 
 import subprocess
@@ -12,27 +12,31 @@ lcd.enable_display(True)
 lcd.show_cursor(False)
 lcd.clear()
 
-was = time.strftime("%a %Y-%b-%d\n %H:%M:%S %Z")
+fullstamp = "%a %Y-%b-%d\n %H:%M:%S %Z ?"
+hourstamp = "%Y-%b-%d %H %Z"
+
+was = time.strftime(fullstamp)
+before = time.strftime(hourstamp)
 while True:
 	if lcd.is_pressed(LCD.SELECT):
-		lcd.set_cursor(0, 0)
-		lcd.clear()
-		lcd.message("    RTC")
 		status = subprocess.call(["/sbin/hwclock", "-u", "-w"])
-		lcd.set_cursor(0, 0)
-		lcd.clear()
 		if (status == 0):
-			lcd.message("    RTC\n    Okay")
+			fullstamp = "%a %Y-%b-%d\n %H:%M:%S %Z ."
 		else:
-			lcd.message("    RTC\n    Fail")
-		time.sleep(0.5)
+			fullstamp = "%a %Y-%b-%d\n %H:%M:%S %Z !"
 		while lcd.is_pressed(LCD.SELECT):
 			continue
-		lcd.clear()
-	now = time.strftime("%a %Y-%b-%d\n %H:%M:%S %Z")
+	after = time.strftime(hourstamp)
+	if before != after:
+		status = subprocess.call(["/sbin/hwclock", "-u", "-w"])
+		if (status == 0):
+			fullstamp = "%a %Y-%b-%d\n %H:%M:%S %Z  "
+		else:
+			fullstamp = "%a %Y-%b-%d\n %H:%M:%S %Z !"
+		before = after
+	now = time.strftime(fullstamp)
 	if was != now:
 		lcd.set_cursor(0, 0)
 		lcd.message(now)
-		#print now
 		was = now
 	time.sleep(0.2)
