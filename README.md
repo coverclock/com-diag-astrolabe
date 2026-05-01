@@ -2,7 +2,7 @@
 
 ## Copyright
 
-Copyright 2017 by the  Digital Aggregates Corporation, Arvada Colorado USA.
+Copyright 2017-2026 by the  Digital Aggregates Corporation, Arvada Colorado USA.
 
 ## License
 
@@ -59,6 +59,10 @@ Aggregates Corporation.
 <https://docs.ntpsec.org/latest/ntp_conf.html>
 
 <http://www.jackson-labs.com/assets/uploads/main/CSAC_Manual_v1_6.pdf>
+
+## Articles
+
+<https://boingboing.net/2026/04/30/a-hobbyist-mounted-a-cesium-atomic-clock-on-his-raspberry-pi.html>
 
 ## Repositories
 
